@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RabbitMQMessage{
+public class RabbitMQMessage <T>{
     private ActionTypeEnum actionType;          // ORDER_CREATED, UPCOMING_MOVIE
-    private OrderResponse data;
-
+    private T data;
+    private String destinationEmail;
 }

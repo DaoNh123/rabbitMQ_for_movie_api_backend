@@ -145,6 +145,25 @@ public class RabbitMqConsumer0501Application {
                                 </html>
                         """)
                 .build();
+
+        EmailTemplate userCreatedTemplate = EmailTemplate.builder()
+                .actionType(ActionTypeEnum.USER_CREATED)
+                .htmlContent("""
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                        <title>Page Title</title>
+                        </head>
+                        <body>
+                                                
+                        <h1>This is a verifycation Email!</h1>
+                        <p>Please click <a th:href="@{${verifyLink}}">here</a> to verify your account</p>
+                                                
+                        </body>
+                        </html>
+                        """)
+                .build();
+
         EmailTemplate emailTemplate2 = EmailTemplate.builder()
                 .actionType(ActionTypeEnum.UPCOMING_MOVIE)
                 .htmlContent("""
@@ -164,7 +183,7 @@ public class RabbitMqConsumer0501Application {
                 .build();
 
         List<EmailTemplate> emailTemplateList = List.of(
-                emailTemplate1, emailTemplate2
+                emailTemplate1, emailTemplate2, userCreatedTemplate
         );
         emailTemplateRepo.saveAll(emailTemplateList);
     }

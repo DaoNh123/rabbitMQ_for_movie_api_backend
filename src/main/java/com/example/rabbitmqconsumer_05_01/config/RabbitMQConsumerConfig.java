@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConsumerConfig {
     public static final String QUEUE_MESSAGES = "movie_booking_messages-queue";
+    public static final String USER_CREATE_QUEUE_MESSAGES = "user_created_" + QUEUE_MESSAGES;
     public static final String EXCHANGE_MESSAGES = "movie_booking_messages-exchange";
     public static final String QUEUE_MESSAGES_DLQ = QUEUE_MESSAGES + ".dlq";
     public static final String DLX_EXCHANGE_MESSAGES = QUEUE_MESSAGES + ".dlx";
@@ -34,6 +35,21 @@ public class RabbitMQConsumerConfig {
     Binding bindingMessages() {
         return BindingBuilder.bind(messagesQueue()).to(messagesExchange())
                 .with(QUEUE_MESSAGES);
+        /*  Direct Exchange need "Binding Key" to forwards the message
+         *  to a queue based on "routing-key". In this situation, "QUEUE_MESSAGES"
+         *  is both "queue" and "routing-key"   */
+    }
+    /*  ___________1.b______*/
+    @Bean
+    Queue userCreatedMessagesQueue() {
+        return QueueBuilder.durable(USER_CREATE_QUEUE_MESSAGES)
+                .withArgument("x-dead-letter-exchange", DLX_EXCHANGE_MESSAGES)
+                .build();
+    }
+    @Bean
+    Binding bindingUserCreatedMessages() {
+        return BindingBuilder.bind(userCreatedMessagesQueue()).to(messagesExchange())
+                .with(USER_CREATE_QUEUE_MESSAGES);
         /*  Direct Exchange need "Binding Key" to forwards the message
          *  to a queue based on "routing-key". In this situation, "QUEUE_MESSAGES"
          *  is both "queue" and "routing-key"   */
