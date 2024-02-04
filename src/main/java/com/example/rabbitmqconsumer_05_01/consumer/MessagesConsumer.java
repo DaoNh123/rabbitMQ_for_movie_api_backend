@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -27,6 +28,8 @@ public class MessagesConsumer {
     private final RabbitTemplate rabbitTemplate;
     private final EmailService emailService;
     private EmailTemplateRepo emailTemplateRepo;
+    @Value("${frontend.endpoint}")
+    private String frontendEndpoint;
 
     public MessagesConsumer(RabbitTemplate rabbitTemplate, EmailService emailService, EmailTemplateRepo emailTemplateRepo) {
         this.rabbitTemplate = rabbitTemplate;
@@ -53,8 +56,8 @@ public class MessagesConsumer {
         log.info("**1** Received message in {}    : {}", QUEUE_MESSAGES, message.toString());
         System.out.println("@Payload RabbitMQMessage: " + rabbitMQMessage);
 
-        String frontendEndpoint = "http://127.0.0.1:5500/verify.html";
-        String verifyLink = String.join("", frontendEndpoint, "?verifyCode=",
+        String verifyRootEndpoint = frontendEndpoint + "/verify.html";
+        String verifyLink = String.join("", verifyRootEndpoint, "?verifyCode=",
                 rabbitMQMessage.getData().getVerificationCode(), "&email=",
                 rabbitMQMessage.getData().getEmail());
 

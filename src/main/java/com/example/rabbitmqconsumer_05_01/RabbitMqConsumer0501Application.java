@@ -114,12 +114,17 @@ public class RabbitMqConsumer0501Application {
                                             color: blue;
                                             background-color: azure;
                                         }
+                                        img.poster {
+                                            width: 200px;
+                                        }
                                     </style>
                                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                                 </head>
                                 <body>
                                 <h2>Order Created</h2>
                                 <p>Thank you because choosing our service! Here is your order details: </p>
+                                <p>Movie: <span th:text="${orderResponse.slot.movie.movieName}"></span></p>
+                                <img class="poster" th:src="@{${orderResponse.slot.movie.posterUrl}}"/>
 
                                 <table>
                                     <tr>
